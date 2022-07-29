@@ -6,7 +6,7 @@ Deprecated==1.2.8
 greenlet==0.4.13
 idna==2.9
 mccabe==0.6.1
-mistune==2.0.0a3
+mistune==2.0.3
 pycodestyle==2.5.0
 pydocstyle==5.0.2
 pyflakes==2.2.0
