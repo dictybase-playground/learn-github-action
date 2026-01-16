@@ -1,0 +1,24 @@
+name: Go workflow
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  build:
+    if: ${{ github.event.label.name == 'Growing / in Preparation' || github.event.label.name == 'Shipped' || github.event.label.name == 'invalid' }}
+    runs-on: ubuntu-latest
+    steps:
+       - name: Install actions
+         uses: sigoden/install-binary@v1.2
+         with:
+           repo: 'dictybase-docker/github-actions'
+           name: 'action'
+       - name: Run action binary
+         env:
+           APIKEY: ${{secrets.MAILGUN}}
+           ISSUELABELS: ${{ github.event.issue.labels }}
+           ISSUEID: ${{ github.event.issue.number }}
+           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           TRIGGER: ${{ github.event.label.name }}
+         run: action
