@@ -17,8 +17,17 @@ jobs:
        - name: Run action binary
          env:
            APIKEY: ${{secrets.MAILGUN}}
-           ISSUELABELS: ${{ github.event.issue.labels }}
            ISSUEID: ${{ github.event.issue.number }}
            TOKEN: ${{ secrets.GITHUB_TOKEN }}
-           TRIGGER: ${{ github.event.label.name }}
-         run: action
+           LABEL: ${{ github.event.label.name }}
+         run: action \
+                --owner dictybase-playground \
+                --repository learn-github-action \
+                --token $TOKEN \
+                issue-label-email
+                --label $LABEL \
+                --issueid $ISSUEID \
+                --domain mail.dictybase.dev \
+                --apiKey $APIKEY \
+                --fromEmail dictystocks@northwestern.edu
+                
