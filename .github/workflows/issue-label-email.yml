@@ -1,0 +1,43 @@
+name: Issue label email
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: read
+
+jobs:
+  send-order-update:
+    if: ${{ github.event.label.name == 'Growing / in Preparation' || github.event.label.name == 'Shipped' || github.event.label.name == 'invalid' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download github-actions CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: 2.11.0
+        run: |
+          gh release download "v${VERSION}" --repo dictybase-docker/github-actions \
+            --pattern "action_${VERSION}_linux_amd64" \
+            --pattern "github-actions_${VERSION}_checksums.txt"
+          grep "action_${VERSION}_linux_amd64" "github-actions_${VERSION}_checksums.txt" | sha256sum -c -
+          install -m 0755 "action_${VERSION}_linux_amd64" "$RUNNER_TEMP/gh-action"
+      - name: Send order update email
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN }}
+          ISSUE_ID: ${{ github.event.issue.number }}
+          ISSUE_LABEL: ${{ github.event.label.name }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: |
+          "$RUNNER_TEMP/gh-action" \
+            --owner "$REPOSITORY_OWNER" \
+            --repository "$REPOSITORY_NAME" \
+            issue-label-email \
+            --issueid "$ISSUE_ID" \
+            --label "$ISSUE_LABEL" \
+            --domain mail.dictycr.org \
+            --fromEmail "Stock center robot<stockbot@mail.dictycr.org>" \
+            --apiKey "$MAILGUN_API_KEY"
