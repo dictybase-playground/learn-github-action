@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   send-order-update:
-    if: ${{ github.event.label.name == 'Growing / in Preparation' || github.event.label.name == 'Shipped' || github.event.label.name == 'invalid' }}
+    if: ${{ github.event.label.name == 'Grow' || github.event.label.name == 'Growing' || github.event.label.name == 'In Preparation' || github.event.label.name == 'Shipped' || github.event.label.name == 'invalid' }}
     runs-on: ubuntu-latest
 
     steps:
