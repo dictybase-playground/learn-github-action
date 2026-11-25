@@ -38,6 +38,6 @@ jobs:
             issue-label-email \
             --issueid "$ISSUE_ID" \
             --label "$ISSUE_LABEL" \
-            --domain mail.dictycr.org \
-            --fromEmail "Stock center robot<stockbot@mail.dictycr.org>" \
+            --domain mail.dictybase.dev \
+            --fromEmail "Stock center robot<stockbot@mail.dictybase.dev>" \
             --apiKey "$MAILGUN_API_KEY"
